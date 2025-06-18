@@ -2,7 +2,7 @@ import json
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from decouple import config
-from .SendWhatsapMessage import send_whatsapp_message
+from .SendWhatsapMessage import send_whatsapp_message,send_whatsapp_menu
 
 VERIFY_TOKEN = config('VERIFY_TOKEN')
 
@@ -23,10 +23,24 @@ def webhook(request):
         try:
             # Extrae informacion del json obtenido
             entry = data['entry'][0]
+            message_data = entry['changes'][0]['value']['messages'][0]
+            sender_telephone = message_data['from']
+            if message_data["type"] == "interactive":
+                pass
+
+
+            else:
+                pass
+            
+            
+            
+            
+            
+            
             sender_name = entry['changes'][0]['value']['contacts'][0]['profile']['name']
             print(data)
-            message_data = entry['changes'][0]['value']['messages'][0]
-            sender_telephone = message_data['from']  #Telefono del Usuario
+            
+              #Telefono del Usuario
             message_text = message_data['text']['body']  # Mensaje obtenido
 
             print(f"Mensaje de {sender_telephone}: {message_text}")
@@ -35,6 +49,7 @@ def webhook(request):
                 Hola, Gracias por comunicarte {sender_name} y dar tu opinion {message_text}.
             """
             #Regresar el mensaje
+            #send_whatsapp_menu(sender_telephone)
             #send_whatsapp_message(sender_telephone, message_to_send)
 
         except KeyError as e:
